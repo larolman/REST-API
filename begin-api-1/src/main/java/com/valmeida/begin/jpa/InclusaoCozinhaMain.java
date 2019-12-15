@@ -8,6 +8,8 @@ import org.springframework.context.ApplicationContext;
 
 import com.valmeida.begin.BeginApi1Application;
 import com.valmeida.begin.domain.model.Cozinha;
+import com.valmeida.begin.domain.repository.CozinhaRepository;
+import com.valmeida.begin.infrastructure.repository.CozinhaRepositoryImpl;
 
 public class InclusaoCozinhaMain {
 
@@ -15,9 +17,9 @@ public class InclusaoCozinhaMain {
 		ApplicationContext app = new SpringApplicationBuilder(BeginApi1Application.class).web(WebApplicationType.NONE)
 				.run(args);
 		
-		CadastroCozinha cadastrocozinha = app.getBean(CadastroCozinha.class);
+		CozinhaRepository cozinhaRepository = app.getBean(CozinhaRepositoryImpl.class);
 		
-		List<Cozinha> cozinhas = cadastrocozinha.listar();
+		List<Cozinha> cozinhas = cozinhaRepository.listar();
 		
 		cozinhas.forEach(c -> System.out.println("Cozinha tipo: " + c.getNome()));
 
