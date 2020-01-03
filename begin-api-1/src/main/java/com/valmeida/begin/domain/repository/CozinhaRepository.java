@@ -8,7 +8,6 @@ import com.valmeida.begin.domain.model.Cozinha;
 
 @Repository
 public interface CozinhaRepository  extends JpaRepository<Cozinha, Long>{
-	
 
 	
 }
