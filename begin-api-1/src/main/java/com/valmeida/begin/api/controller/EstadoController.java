@@ -1,6 +1,8 @@
 package com.valmeida.begin.api.controller;
 
 import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,15 +34,15 @@ public class EstadoController {
 	
 	@GetMapping
 	public List<Estado> listar() {
-		return estadoRepository.listar();
+		return estadoRepository.findAll();
 	}
 	
 	@GetMapping("/{estadoId}")
 	public ResponseEntity<Estado> buscar(@PathVariable Long estadoId) {
-		Estado estado = estadoRepository.buscar(estadoId);
+		Optional<Estado> estado = estadoRepository.findById(estadoId);
 		
-		if (estado != null) {
-			 return ResponseEntity.ok(estado);
+		if (estado.isPresent()) {
+			 return ResponseEntity.ok(estado.get());
 		}
 		
 		return ResponseEntity.notFound().build();
@@ -54,9 +56,9 @@ public class EstadoController {
 	
 	@PutMapping("/{estadoId}")
 	public ResponseEntity<Estado> alterar(@PathVariable Long estadoId, @RequestBody Estado estado) {
-		Estado buscarEstado = estadoRepository.buscar(estadoId);
+		Optional<Estado> buscarEstado = estadoRepository.findById(estadoId);
 		
-		if (buscarEstado != null) {
+		if (buscarEstado.isPresent()) {
 			estado.setId(estadoId);
 			estadoService.salvar(estado);
 			return ResponseEntity.ok(estado);

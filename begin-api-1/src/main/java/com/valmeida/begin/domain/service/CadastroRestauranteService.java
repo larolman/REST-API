@@ -2,6 +2,7 @@ package com.valmeida.begin.domain.service;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import com.valmeida.begin.domain.exception.EntidadeNaoEncontradaException;
@@ -25,7 +26,16 @@ public class CadastroRestauranteService {
 		
 		restaurante.setCozinha(cozinha);
 		
-		return restauranteRepository.salvar(restaurante);
+		return restauranteRepository.save(restaurante);
 	}
 	
+	
+	public void remover(Long restauranteId) {
+		try {
+			restauranteRepository.deleteById(restauranteId);
+		} catch (EmptyResultDataAccessException e) {
+			throw new EntidadeNaoEncontradaException(String.format("Entidade com código %d não encontrada", restauranteId));
+		}
+		
+	}
 }
