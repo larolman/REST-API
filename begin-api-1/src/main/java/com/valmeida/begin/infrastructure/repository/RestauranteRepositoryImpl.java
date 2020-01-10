@@ -6,6 +6,7 @@ import static com.valmeida.begin.infrastructure.repository.spec.RestauranteSpecs
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -18,9 +19,6 @@ import javax.persistence.criteria.Root;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Repository;
-
-
-import org.springframework.util.StringUtils;
 
 import com.valmeida.begin.domain.model.Restaurante;
 import com.valmeida.begin.domain.repository.RestauranteRepository;
@@ -43,20 +41,16 @@ public class RestauranteRepositoryImpl implements RestauranteRepositoryQueries {
 		CriteriaQuery<Restaurante> criteriaQuery = criteriaBuilder.createQuery(Restaurante.class);
 		Root<Restaurante> root = criteriaQuery.from(Restaurante.class);
 		
-		var predicates = new ArrayList<Predicate>();
+		List<Predicate> predicates = new ArrayList<Predicate>();
 		
-		if (StringUtils.hasText(nome)) {
-			predicates.add(criteriaBuilder.like(root.get("nome"), "%" + nome + "%"));
-		}
+		Optional<String> nomeOptional = Optional.ofNullable(nome);
+		Optional<BigDecimal> taxaFreteInicialOptional = Optional.ofNullable(taxaFreteInicial);
+		Optional<BigDecimal> taxaFreteFinalOptional = Optional.ofNullable(taxaFreteFinal);
 		
-		if (taxaFreteInicial != null) {
-			predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("taxaFrete"), taxaFreteInicial));
-		}
-		
-		if (taxaFreteFinal != null) {
-			predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("taxaFrete"), taxaFreteFinal));
-		}
-		
+		nomeOptional.ifPresent(n -> predicates.add(criteriaBuilder.like(root.get("nome"), "%" + n + "%")));
+		taxaFreteInicialOptional.ifPresent(t -> predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("taxaFrete"), taxaFreteInicial)));
+		taxaFreteFinalOptional.ifPresent(t -> predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("taxaFrete"), taxaFreteFinal)));
+
 		criteriaQuery.where(predicates.toArray(new Predicate[0]));
 		
 		TypedQuery<Restaurante> query = manager.createQuery(criteriaQuery);
