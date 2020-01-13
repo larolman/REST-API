@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -64,20 +65,22 @@ public class RestauranteController {
 	}
 	
 	@PutMapping("/{restauranteId}")
-	public ResponseEntity<?> alterar(@PathVariable Long restauranteId, @RequestBody Restaurante restaurante){
-		Optional<Restaurante> buscarRestaurante = restauranteRepository.findById(restauranteId);
+	public ResponseEntity<?> alterar(@PathVariable Long restauranteId, @RequestBody Optional<Restaurante> restaurante){
 		
-		if (buscarRestaurante.isPresent() == false) {
-			return ResponseEntity.notFound().build();
+		Optional<Restaurante> restauranteAtual = restauranteRepository.findById(restauranteId);
+		
+		if (restauranteAtual.isPresent()) {
+			
+			try {
+				BeanUtils.copyProperties(restaurante.get(), restauranteAtual.get(), "id", "formaPagamento");
+				restauranteService.salvar(restauranteAtual.get());
+				return ResponseEntity.ok(restauranteAtual);
+			} catch (EntidadeNaoEncontradaException e) {
+				return ResponseEntity.badRequest().body(e.getMessage());
+			}
 		}
 		
-		try {
-			restaurante.setId(restauranteId);
-			restaurante = restauranteService.salvar(restaurante);
-			return ResponseEntity.ok(restaurante);
-		} catch (EntidadeNaoEncontradaException e) {
-			return ResponseEntity.badRequest().body(e.getMessage());
-		}
+		return ResponseEntity.notFound().build();
 	}
 	
 	@DeleteMapping("/{restauranteId}")
@@ -98,13 +101,13 @@ public class RestauranteController {
 		
 		Optional<Restaurante> buscarRestaurante = restauranteRepository.findById(restauranteId);
 		
-		if (buscarRestaurante.isPresent() == false) {
-			return ResponseEntity.notFound().build();
+		if (buscarRestaurante.isPresent()) {
+			merge(campos, buscarRestaurante.get());
+			
+			return alterar(restauranteId, buscarRestaurante);
 		}
 		
-		merge(campos, buscarRestaurante.get());
-		
-		return alterar(restauranteId, buscarRestaurante.get());
+		return ResponseEntity.notFound().build();
 	}
 
 	private void merge(Map<String, Object> camposOrigem, Restaurante restauranteDestino) {

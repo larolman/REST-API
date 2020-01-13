@@ -3,6 +3,7 @@ package com.valmeida.begin.api.controller;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -55,13 +56,13 @@ public class EstadoController {
 	}
 	
 	@PutMapping("/{estadoId}")
-	public ResponseEntity<Estado> alterar(@PathVariable Long estadoId, @RequestBody Estado estado) {
-		Optional<Estado> buscarEstado = estadoRepository.findById(estadoId);
+	public ResponseEntity<?> alterar(@PathVariable Long estadoId, @RequestBody Estado estado) {
+		Optional<Estado> estadoAtual = estadoRepository.findById(estadoId);
 		
-		if (buscarEstado.isPresent()) {
-			estado.setId(estadoId);
-			estadoService.salvar(estado);
-			return ResponseEntity.ok(estado);
+		if (estadoAtual.isPresent()) {
+			BeanUtils.copyProperties(estado, estadoAtual.get(), "id");
+			estadoService.salvar(estadoAtual.get());
+			return ResponseEntity.ok(estadoAtual);
 		}
 		
 		return ResponseEntity.notFound().build();
