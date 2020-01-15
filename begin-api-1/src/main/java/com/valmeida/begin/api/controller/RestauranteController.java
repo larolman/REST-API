@@ -65,14 +65,15 @@ public class RestauranteController {
 	}
 	
 	@PutMapping("/{restauranteId}")
-	public ResponseEntity<?> alterar(@PathVariable Long restauranteId, @RequestBody Optional<Restaurante> restaurante){
+	public ResponseEntity<?> alterar(@PathVariable Long restauranteId, @RequestBody Restaurante restaurante){
 		
 		Optional<Restaurante> restauranteAtual = restauranteRepository.findById(restauranteId);
 		
 		if (restauranteAtual.isPresent()) {
 			
 			try {
-				BeanUtils.copyProperties(restaurante.get(), restauranteAtual.get(), "id", "formaPagamento");
+				BeanUtils.copyProperties(restaurante, restauranteAtual.get(), "id", "formaPagamento",
+											"endereco", "dataCadastro", "produtos");
 				restauranteService.salvar(restauranteAtual.get());
 				return ResponseEntity.ok(restauranteAtual);
 			} catch (EntidadeNaoEncontradaException e) {
@@ -104,7 +105,7 @@ public class RestauranteController {
 		if (buscarRestaurante.isPresent()) {
 			merge(campos, buscarRestaurante.get());
 			
-			return alterar(restauranteId, buscarRestaurante);
+			return alterar(restauranteId, buscarRestaurante.get());
 		}
 		
 		return ResponseEntity.notFound().build();
