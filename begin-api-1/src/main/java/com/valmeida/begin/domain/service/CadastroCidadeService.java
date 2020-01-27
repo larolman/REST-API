@@ -1,29 +1,33 @@
 package com.valmeida.begin.domain.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
-import com.valmeida.begin.domain.exception.EntidadeNaoEncontradaException;
+import com.valmeida.begin.domain.exception.CidadeNaoEncontradaException;
+import com.valmeida.begin.domain.exception.EntidadeEmUsoException;
+
 import com.valmeida.begin.domain.model.Cidade;
 import com.valmeida.begin.domain.model.Estado;
 import com.valmeida.begin.domain.repository.CidadeRepository;
-import com.valmeida.begin.domain.repository.EstadoRepository;
+
 
 
 @Service
 public class CadastroCidadeService {
 	
+	private static final String MSG_ENTIDADE_EM_USO = "Cidade de código %d não pode ser removido pois está em uso";
+
 	@Autowired
 	private CidadeRepository cidadeRepository;
 	
 	@Autowired
-	private EstadoRepository estadoRepository;
+	private CadastroEstadoService estadoService;
 	
 	public Cidade salvar(Cidade cidade) {
 		Long estadoId =  cidade.getEstado().getId();
-		Estado estado = estadoRepository.findById(estadoId).orElseThrow(() -> new EntidadeNaoEncontradaException(String.format("Não existe estado com Id %d",
-				estadoId)));
+		Estado estado = estadoService.buscarOuFalhar(estadoId);
 
 		cidade.setEstado(estado);
 		return cidadeRepository.save(cidade);
@@ -32,8 +36,17 @@ public class CadastroCidadeService {
 	public void remover(Long cidadeId) {
 		try {
 			cidadeRepository.deleteById(cidadeId);
+			
 		} catch (EmptyResultDataAccessException e) {
-			throw new EntidadeNaoEncontradaException(String.format("Não existe cidade com Id %d", cidadeId));
-		} 
+			throw new CidadeNaoEncontradaException(cidadeId);
+			
+		} catch (DataIntegrityViolationException e) {
+			throw new EntidadeEmUsoException(String.format(MSG_ENTIDADE_EM_USO, cidadeId));		
+		}
+	}
+
+	public Cidade buscarOuFalhar(Long cidadeId) {
+		return cidadeRepository.findById(cidadeId)
+				.orElseThrow(() -> new CidadeNaoEncontradaException(cidadeId));
 	}
 }
