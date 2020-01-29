@@ -1,6 +1,6 @@
 package com.valmeida.begin.domain.exception;
 
-public class CozinhaNaoEncontradaException extends NegocioException{
+public class CozinhaNaoEncontradaException extends EntidadeNaoEncontradaException{
 
 	private static final long serialVersionUID = 1L;
 	

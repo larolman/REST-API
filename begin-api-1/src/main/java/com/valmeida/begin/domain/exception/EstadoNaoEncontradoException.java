@@ -1,6 +1,6 @@
 package com.valmeida.begin.domain.exception;
 
-public class EstadoNaoEncontradoException extends NegocioException{
+public class EstadoNaoEncontradoException extends EntidadeNaoEncontradaException{
 
 	private static final long serialVersionUID = 1L;
 	
