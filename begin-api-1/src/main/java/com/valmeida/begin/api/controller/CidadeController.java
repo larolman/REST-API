@@ -3,6 +3,7 @@ package com.valmeida.begin.api.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,7 +49,7 @@ public class CidadeController {
 	
 	@PostMapping
 	@ResponseStatus(code = HttpStatus.CREATED)
-	public Cidade adicionar(@RequestBody Cidade cidade) {
+	public Cidade adicionar(@RequestBody @Valid Cidade cidade) {
 		try {
 			return cidadeService.salvar(cidade);
 		} catch (EstadoNaoEncontradoException e) {
@@ -57,7 +58,7 @@ public class CidadeController {
 	}
 	
 	@PutMapping("/{cidadeId}")
-	public Cidade alterar(@PathVariable Long cidadeId, @RequestBody Cidade cidade) {
+	public Cidade alterar(@PathVariable Long cidadeId, @RequestBody @Valid Cidade cidade) {
 		try {
 			Cidade CidadeAtual = cidadeService.buscarOuFalhar(cidadeId);
 			BeanUtils.copyProperties(cidade, CidadeAtual, "id");

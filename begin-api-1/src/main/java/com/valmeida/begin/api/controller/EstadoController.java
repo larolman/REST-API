@@ -2,6 +2,7 @@ package com.valmeida.begin.api.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,12 +45,12 @@ public class EstadoController {
 	
 	@PostMapping
 	@ResponseStatus(code = HttpStatus.CREATED)
-	public Estado adicionar(@RequestBody Estado estado) {
+	public Estado adicionar(@RequestBody @Valid Estado estado) {
 		return estadoService.salvar(estado);
 	}
 	
 	@PutMapping("/{estadoId}")
-	public Estado alterar(@PathVariable Long estadoId, @RequestBody Estado estado) {
+	public Estado alterar(@PathVariable Long estadoId, @RequestBody @Valid Estado estado) {
 		Estado estadoAtual = estadoService.buscarOuFalhar(estadoId);
 
 		BeanUtils.copyProperties(estado, estadoAtual, "id");
