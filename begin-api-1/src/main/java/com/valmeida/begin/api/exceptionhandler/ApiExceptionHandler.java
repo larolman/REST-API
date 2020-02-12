@@ -24,6 +24,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import com.fasterxml.jackson.databind.JsonMappingException.Reference;
 import com.fasterxml.jackson.databind.exc.IgnoredPropertyException;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
+import com.valmeida.begin.core.validation.ValidacaoException;
 import com.valmeida.begin.domain.exception.EntidadeEmUsoException;
 import com.valmeida.begin.domain.exception.EntidadeNaoEncontradaException;
 import com.valmeida.begin.domain.exception.NegocioException;
@@ -62,6 +63,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 				, status, request);
 
 	}
+	
 	
 	@ExceptionHandler(EntidadeEmUsoException.class)
 	public ResponseEntity<Object> handleEntidadeEmUsoException(EntidadeEmUsoException ex, WebRequest request){
@@ -104,6 +106,32 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 		
 		
 		return handleExceptionInternal(ex, problem, new HttpHeaders(), status, request);
+	}
+	
+	@ExceptionHandler(ValidacaoException.class)
+	private ResponseEntity<Object> handleValidacaoException(ValidacaoException ex, WebRequest request){
+		
+		HttpStatus status = HttpStatus.BAD_REQUEST;
+		
+		List<Problem.Field> problemFields = ex.getBindingResult().getFieldErrors().stream()
+				.map(fieldErros -> {
+					String message = messageSource.getMessage(fieldErros, LocaleContextHolder.getLocale());
+					
+					return Problem.Field.builder()												
+						.name(fieldErros.getField())
+						.userMessage(message)
+						.build();
+						})
+				.collect(Collectors.toList());
+
+		String detail = "Um ou mais campos estão inválidos. Faça o preenchimento correto e tente novamente.";
+
+		Problem problem = createProblemBuilder(status, ProblemType.DADOS_INVALIDOS, detail)
+			.fields(problemFields)	
+			.build();
+
+		return handleExceptionInternal(ex, problem, new HttpHeaders(), status, request);
+			
 	}
 	
 	@Override
