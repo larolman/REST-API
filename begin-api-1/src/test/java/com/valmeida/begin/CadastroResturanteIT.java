@@ -29,96 +29,90 @@ import io.restassured.http.ContentType;
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource("/application-test.properties")
-public class CadastroCozinhaIT {
+public class CadastroResturanteIT {
 	
 	@LocalServerPort
 	private int port;
 	
 	@Autowired
 	private DatabaseCleaner databaseCleaner;
-	
+
 	@Autowired
-	TestDataFactory testData;
-		
+	TestDataFactory testData;	
+	
 	@Before
 	public void setup() {
 		RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
 		RestAssured.port = port;
-		RestAssured.basePath = "/cozinhas";
+		RestAssured.basePath = "/restaurantes";
 		
 		databaseCleaner.clearTables();
 		
-		testData.adicionaCozinhas();
-		
+		testData.adicionaRestaurantes();
 	}
 	
-	
 	@Test
-	public void deveRetornarStatus200_QuandoConsultarCozinhas() {
+	public void deveRetornar200_QuandoConsultarRestaurantes() {
 		given()
 			.accept(ContentType.JSON)
-			.when()
-				.get()
-			.then()
-				.statusCode(HttpStatus.OK.value());
-		
+		.when()
+			.get()
+		.then()
+			.statusCode(HttpStatus.OK.value());
 	}
 	
 	@Test
-	public void deveConterTamanhoDaListaCozinhas_QuandoConsultarCozinhas() {	
-		given()
-			.accept(ContentType.JSON)
-			.when()
-				.get()
-			.then()
-				.body("", Matchers.hasSize(testData.cozinhas.size()));	
-		
-	}
-	
-	@Test
-	public void deveRetornarStatus201_QuandoCadastrarCozinha() {		
+	public void deveRetornar201_QuandoAdicionarRestaurante() {
 		try {
-			InputStream stream = ResourceUtils.class.getResourceAsStream("/adiciona_cozinha.json");
-			String cozinhaJson = StreamUtils.copyToString(stream, Charset.forName("UTF-8"));
+			InputStream stream = ResourceUtils.class.getResourceAsStream("/adiciona_restaurante.json");
+			String restauranteJson = StreamUtils.copyToString(stream, Charset.forName("UTF-8"));
 			
 			given()
-			.body(cozinhaJson)
-			.contentType(ContentType.JSON)
-			.accept(ContentType.JSON)
+				.accept(ContentType.JSON)
+				.contentType(ContentType.JSON)
+				.body(restauranteJson)
 			.when()
 				.post()
 			.then()
-			.statusCode(HttpStatus.CREATED.value());
+				.statusCode(HttpStatus.CREATED.value());
 		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
-	
+			throw new RuntimeException(e);		
+			}
 	}
 	
 	@Test
-	public void deveRetornar200_QuandoConsultarSingletonCozinha() {
+	public void deveRetornar404_QuandoConsultarSingletonRestuarante() {
 		given()
-			.pathParam("cozinhaId", testData.cozinhas.get(0).getId())
 			.accept(ContentType.JSON)
+			.pathParam("restauranteId", testData.RESOURCE_INEXISTENTE)
 		.when()
-			.get("/{cozinhaId}")
-		.then()
-			.statusCode(HttpStatus.OK.value())
-			.body("nome", equalTo(testData.cozinhas.get(0).getNome()));
-		
-	}
-	
-	@Test
-	public void deveRetornar404_QuandoConsultarSingletonCozinha() {
-		given()
-			.pathParam("cozinhaId", testData.RESOURCE_INEXISTENTE)
-			.accept(ContentType.JSON)
-		.when()
-			.get("/{cozinhaId}")
+			.get("/{restauranteId}")
 		.then()
 			.statusCode(HttpStatus.NOT_FOUND.value());
-			
 	}
 	
+	@Test
+	public void deveConterTamanhoDaListaRestaurantes_QuandoConsultarRestaurantes() {
+		given()
+			.accept(ContentType.JSON)
+		.when()
+			.get()
+		.then()
+			.statusCode(HttpStatus.OK.value())
+			.body("", Matchers.hasSize(testData.restaurantes.size()));
+	}
 	
+	@Test 
+	public void deveRetornar200_QuandoConsultarSingletonRestaurante() {
+		given()
+			.accept(ContentType.JSON)
+			.pathParam("restauranteId", testData.restaurantes.get(0).getId())
+		.when()
+			.get("/{restauranteId}")
+		.then()
+			.statusCode(HttpStatus.OK.value())
+			.body("nome", equalTo(testData.restaurantes.get(0).getNome()));			
+		
+	}
+
 }
