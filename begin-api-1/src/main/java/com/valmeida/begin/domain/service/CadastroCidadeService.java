@@ -1,9 +1,11 @@
 package com.valmeida.begin.domain.service;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.valmeida.begin.domain.exception.CidadeNaoEncontradaException;
 import com.valmeida.begin.domain.exception.EntidadeEmUsoException;
@@ -25,6 +27,7 @@ public class CadastroCidadeService {
 	@Autowired
 	private CadastroEstadoService estadoService;
 	
+	@Transactional
 	public Cidade salvar(Cidade cidade) {
 		Long estadoId =  cidade.getEstado().getId();
 		Estado estado = estadoService.buscarOuFalhar(estadoId);
@@ -33,6 +36,7 @@ public class CadastroCidadeService {
 		return cidadeRepository.save(cidade);
 	}
 	
+	@Transactional
 	public void remover(Long cidadeId) {
 		try {
 			cidadeRepository.deleteById(cidadeId);

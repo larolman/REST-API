@@ -1,6 +1,6 @@
 package com.valmeida.begin.domain.model;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,7 +14,6 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 
 import org.hibernate.annotations.CreationTimestamp;
-
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -37,7 +36,7 @@ public class Usuario {
 	
 	@Column(nullable = false, columnDefinition = "datetime")
 	@CreationTimestamp
-	private LocalDateTime dataCadastro;
+	private OffsetDateTime dataCadastro;
 	
 	@ManyToMany
 	@JoinTable(name = "usuario_grupo",
