@@ -18,14 +18,10 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.groups.ConvertGroup;
-import javax.validation.groups.Default;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import com.valmeida.begin.core.validation.Groups;
 import com.valmeida.begin.core.validation.TaxaFrete;
 
 import lombok.Data;
@@ -50,8 +46,6 @@ public class Restaurante {
 	private BigDecimal taxaFrete;
 	
 	@Valid
-	@ConvertGroup(from = Default.class,to = Groups.CozinhaId.class)
-	@NotNull
 	@ManyToOne
 	@JoinColumn(name = "cozinha_id", nullable = false)
 	private Cozinha cozinha;
