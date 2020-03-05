@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.valmeida.begin.api.model.input.RestauranteInput;
+import com.valmeida.begin.domain.model.Cidade;
 import com.valmeida.begin.domain.model.Cozinha;
 import com.valmeida.begin.domain.model.Restaurante;
 
@@ -21,6 +22,8 @@ public class RestauranteInputDisassembler {
 	public void copyToDomainObject(RestauranteInput restauranteInput, Restaurante restaurante) {
 		// Para evitar Hibernate Exception
 		restaurante.setCozinha(new Cozinha());
+		
+		restaurante.getEndereco().setCidade(new Cidade());
 		
 		modelMapper.map(restauranteInput, restaurante);
 	}

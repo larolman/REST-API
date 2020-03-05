@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.valmeida.begin.domain.exception.EntidadeEmUsoException;
 
 import com.valmeida.begin.domain.exception.RestauranteNaoEncontradoException;
+import com.valmeida.begin.domain.model.Cidade;
 import com.valmeida.begin.domain.model.Cozinha;
 import com.valmeida.begin.domain.model.Restaurante;
 import com.valmeida.begin.domain.repository.RestauranteRepository;
@@ -24,12 +25,19 @@ public class CadastroRestauranteService {
 	@Autowired
 	private CadastroCozinhaService cozinhaService;
 	
+	@Autowired
+	private CadastroCidadeService cidadeService;
+	
 	@Transactional
 	public Restaurante salvar(Restaurante restaurante) {
 		Long cozinhaId = restaurante.getCozinha().getId();
+		Long cidadeId = restaurante.getEndereco().getCidade().getId();
+		
 		Cozinha cozinha = cozinhaService.buscarOuFalhar(cozinhaId);
+		Cidade cidade = cidadeService.buscarOuFalhar(cidadeId);
 		
 		restaurante.setCozinha(cozinha);
+		restaurante.getEndereco().setCidade(cidade);
 		
 		return restauranteRepository.save(restaurante);
 	}
