@@ -1,5 +1,7 @@
 package com.valmeida.begin.domain.service;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -8,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.valmeida.begin.api.model.input.UsuarioInputAtualizaSenha;
 import com.valmeida.begin.domain.exception.EntidadeEmUsoException;
+import com.valmeida.begin.domain.exception.NegocioException;
 import com.valmeida.begin.domain.exception.UsuarioNaoEncontradoException;
 import com.valmeida.begin.domain.exception.UsuarioSenhaInvalidaException;
 import com.valmeida.begin.domain.model.Usuario;
@@ -23,6 +26,16 @@ public class CadastroUsuarioService {
 	
 	@Transactional
 	public Usuario salvar(Usuario usuario) {
+		
+		usuarioRepository.detach(usuario);
+		
+		Optional<Usuario> usuarioExistente = usuarioRepository.findByEmail(usuario.getEmail());
+		
+		if (usuarioExistente.isPresent() && !usuarioExistente.get().equals(usuario)) {
+			throw new NegocioException(
+					String.format("Já existe usuário com o e-mail %s", usuario.getEmail()));
+		}
+		
 		return usuarioRepository.save(usuario);
 	}
 	
