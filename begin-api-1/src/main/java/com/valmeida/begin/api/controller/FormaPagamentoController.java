@@ -41,7 +41,7 @@ public class FormaPagamentoController {
 	private FormaPagamentoInputDisassembler formaPagamentoInputDisassembler;
 	
 	@GetMapping
-	public List<FormaPagamentoModel> listar() {
+	public List<FormaPagamentoModel> listar() throws Exception {
 		return formaPagamentoAssembler.toCollectionModel(formaPagamentoRepository.findAll());
 	}
 	

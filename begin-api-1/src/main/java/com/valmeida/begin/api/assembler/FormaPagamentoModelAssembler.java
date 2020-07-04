@@ -1,6 +1,8 @@
 package com.valmeida.begin.api.assembler;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
@@ -20,10 +22,16 @@ public class FormaPagamentoModelAssembler {
 		return modelMapper.map(formaPagamento, FormaPagamentoModel.class);
 	}
 	
-	public List<FormaPagamentoModel> toCollectionModel(List<FormaPagamento> pagamentos) {
-		return pagamentos.stream()
-						.map(formaPagamento -> toModel(formaPagamento))
-						.collect(Collectors.toList());
+	public List<FormaPagamentoModel> toCollectionModel(Collection<FormaPagamento> pagamentos) throws Exception {
+		
+		if (pagamentos instanceof List<?> || pagamentos instanceof Set<?>) {
+			return pagamentos.stream()
+					.map(formaPagamento -> toModel(formaPagamento))
+					.collect(Collectors.toList());
+		} else {
+			throw new Exception("Este método aceita apenas List ou hashSet");
+		}
+
 	}				
 	
 	
