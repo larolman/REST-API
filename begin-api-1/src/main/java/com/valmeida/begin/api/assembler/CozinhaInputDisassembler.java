@@ -1,14 +1,15 @@
 package com.valmeida.begin.api.assembler;
 
 import org.modelmapper.ModelMapper;
-import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.valmeida.begin.api.model.input.CozinhaInput;
 import com.valmeida.begin.domain.model.Cozinha;
 
-@Component
+@Service
 public class CozinhaInputDisassembler {
-	
+	@Autowired
 	private ModelMapper modelMapper;
 	
 	public Cozinha toDomainObject(CozinhaInput cozinhaInput) {
