@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import com.valmeida.begin.api.assembler.PermissaoModelAssembler;
+import com.valmeida.begin.api.model.PermissaoModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -30,7 +32,7 @@ public class GrupoController {
 	
 	@Autowired
 	private CadastroGrupoService grupoService;
-	
+
 	@Autowired
 	private GrupoRepository grupoRepository;
 	
@@ -39,6 +41,9 @@ public class GrupoController {
 	
 	@Autowired
 	private GrupoInputDisassembler grupoInputDisassembler;
+
+	@Autowired
+	private PermissaoModelAssembler permissaoModelAssembler;
 	
 	@GetMapping
 	public List<GrupoModel> listar() {
@@ -49,6 +54,13 @@ public class GrupoController {
 	public GrupoModel buscar(@PathVariable Long grupoId) {
 		return grupoModelAssembler.toModel(grupoService.buscarOuFalhar(grupoId));
 	}
+
+	@GetMapping("/{grupoId}/permissoes")
+	public List<PermissaoModel> listarPermissoes(@PathVariable final Long grupoId) {
+		final var grupo = this.grupoService.buscarOuFalhar(grupoId);
+
+		return this.permissaoModelAssembler.toCollectionModel(grupo.getPermissoes());
+	}
 	
 	@PostMapping
 	@ResponseStatus(code = HttpStatus.CREATED)
@@ -56,6 +68,12 @@ public class GrupoController {
 		Grupo grupo = grupoService.salvar(grupoInputDisassembler.toDomainObject(grupoInput));
 		
 		return grupoModelAssembler.toModel(grupo);
+	}
+
+	@PutMapping("/{grupoId}/permissoes/{permissaoId}")
+	@ResponseStatus(code = HttpStatus.NO_CONTENT)
+	public void adicionarPermissao(@PathVariable final Long grupoId, @PathVariable final Long permissaoId) {
+		this.grupoService.adicionarPermissao(grupoId, permissaoId);
 	}
 	
 	@PutMapping("/{grupoId}")
@@ -71,5 +89,11 @@ public class GrupoController {
 	@ResponseStatus(code = HttpStatus.NO_CONTENT)
 	public void remover(@PathVariable Long grupoId) {
 		grupoService.remover(grupoId);
+	}
+
+	@DeleteMapping("/{grupoId}/permissoes/{permissaoId}")
+	@ResponseStatus(code = HttpStatus.NO_CONTENT)
+	public void removerPermissao(@PathVariable final Long grupoId, @PathVariable final Long permissaoId) {
+		this.grupoService.removerPermissao(grupoId, permissaoId);
 	}
 }

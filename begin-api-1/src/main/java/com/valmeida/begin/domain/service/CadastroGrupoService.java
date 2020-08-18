@@ -1,5 +1,6 @@
 package com.valmeida.begin.domain.service;
 
+import com.valmeida.begin.domain.repository.PermissaoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -18,6 +19,9 @@ public class CadastroGrupoService {
 	
 	@Autowired
 	private GrupoRepository grupoRepository;
+
+	@Autowired
+	private CadastroPermissaoService permissaoService;
 	
 	@Transactional
 	public Grupo salvar(Grupo grupo) {
@@ -34,10 +38,25 @@ public class CadastroGrupoService {
 			throw new EntidadeEmUsoException(String.format(MSG_ENTIDADE_EM_USO, grupoId));
 		}
 	}
+
+	@Transactional
+	public void adicionarPermissao(final Long grupoId, final Long permissaoId) {
+		final var grupo = this.buscarOuFalhar(grupoId);
+		final var permissao = this.permissaoService.buscarOuFalhar(permissaoId);
+
+		grupo.adicionarPermissao(permissao);
+	}
+
+	@Transactional
+	public void removerPermissao(final Long grupoId, final Long permissaoId) {
+		final var grupo = this.buscarOuFalhar(grupoId);
+		final var permissao = this.permissaoService.buscarOuFalhar(permissaoId);
+
+		grupo.removerPermissao(permissao);
+	}
 	
 	public Grupo buscarOuFalhar(Long grupoId) {
 		return grupoRepository.findById(grupoId)
 								.orElseThrow(() -> new GrupoNaoEncontradoException(grupoId));
 	}
-	
 }

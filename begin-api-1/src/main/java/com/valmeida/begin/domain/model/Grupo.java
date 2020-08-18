@@ -1,8 +1,5 @@
 package com.valmeida.begin.domain.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -11,6 +8,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import java.util.HashSet;
+import java.util.Set;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -32,6 +31,13 @@ public class Grupo {
 	@JoinTable(name = "grupo_permissao",
 				joinColumns =  @JoinColumn(name = "grupo_id"),
 				inverseJoinColumns = @JoinColumn(name = "permissao_id"))
-	List<Permissao> permissoes = new ArrayList<>();
+	Set<Permissao> permissoes = new HashSet<>();
 
+	public void adicionarPermissao(Permissao permissao) {
+		this.getPermissoes().add(permissao);
+	}
+
+	public void removerPermissao(Permissao permissao) {
+		this.getPermissoes().remove(permissao);
+	}
 }
