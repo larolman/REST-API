@@ -1,12 +1,7 @@
 package com.valmeida.begin.domain.service;
 
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
+import com.valmeida.begin.domain.dto.RestauranteAvroMapper;
 import com.valmeida.begin.domain.exception.EntidadeEmUsoException;
 import com.valmeida.begin.domain.exception.RestauranteNaoEncontradoException;
 import com.valmeida.begin.domain.model.Cidade;
@@ -14,6 +9,12 @@ import com.valmeida.begin.domain.model.Cozinha;
 import com.valmeida.begin.domain.model.FormaPagamento;
 import com.valmeida.begin.domain.model.Restaurante;
 import com.valmeida.begin.domain.repository.RestauranteRepository;
+import com.valmeida.begin.infrastructure.kafka.producer.RestauranteProducer;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class CadastroRestauranteService {
@@ -30,6 +31,12 @@ public class CadastroRestauranteService {
 	
 	@Autowired
 	private CadastroFormaPagamentoService formaPagamentoService;
+
+	@Autowired
+	private RestauranteProducer restauranteProducer;
+
+	@Autowired
+	private RestauranteAvroMapper mapper;
 	
 	@Transactional
 	public Restaurante salvar(Restaurante restaurante) {
@@ -41,8 +48,11 @@ public class CadastroRestauranteService {
 		
 		restaurante.setCozinha(cozinha);
 		restaurante.getEndereco().setCidade(cidade);
-		
-		return restauranteRepository.save(restaurante);
+
+		restaurante = restauranteRepository.save(restaurante);
+		this.restauranteEvent(restaurante);
+
+		return restaurante;
 	}
 	
 	@Transactional
@@ -107,5 +117,9 @@ public class CadastroRestauranteService {
 	public Restaurante buscarOuFalhar(Long restauranteId) {
 		return restauranteRepository.findById(restauranteId)
 				.orElseThrow(() -> new RestauranteNaoEncontradoException(restauranteId));
+	}
+
+	private void restauranteEvent(final Restaurante restaurante) {
+		this.restauranteProducer.send(this.mapper.toAvro(restaurante));
 	}
 }

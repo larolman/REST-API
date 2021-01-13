@@ -1,0 +1,29 @@
+{
+  "type": "record",
+  "namespace": "com.valmeida.begin",
+  "name": "RestauranteAvro",
+  "fields": [
+    {"name":  "id", "type": "long"},
+    {"name":  "nome", "type": "string"},
+    {"name":  "taxaFrete", "type": "double"},
+    {"name":  "ativo", "type": "boolean"},
+    {"name":  "aberto", "type": "boolean"},
+    {"name":  "cozinha",
+      "type": {
+        "type": "record",
+        "namespace": "com.valmeida.begin",
+        "name": "CozinhaAvro",
+        "fields": [
+          {
+            "name": "id",
+            "type": "long"
+          },
+          {
+            "name": "nome",
+            "type": "string"
+          }
+        ]
+      }
+    }
+  ]
+}
