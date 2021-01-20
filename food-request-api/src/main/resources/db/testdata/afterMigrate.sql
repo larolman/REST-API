@@ -78,12 +78,17 @@ insert into grupo (nome) values ('Administrador');
 insert into grupo (nome) values ('Cadastrador');
 insert into grupo (nome) values ('Usuário');
 
-insert into grupo_permissao (grupo_id, permissao_id) values (1,1);
-insert into grupo_permissao (grupo_id, permissao_id) values (1,2);
-insert into grupo_permissao (grupo_id, permissao_id) values (2,1);
+insert into grupo_permissao (grupo_id, permissao_id) values (1, 1);
+insert into grupo_permissao (grupo_id, permissao_id) values (1, 2);
+insert into grupo_permissao (grupo_id, permissao_id) values (2, 1);
 
 insert into usuario (email, senha, data_cadastro) values ('joao@123.com', '1234', utc_timestamp);
 insert into usuario (email, senha, data_cadastro) values ('maria@123.com', '1234', utc_timestamp);
 insert into usuario (email, senha, data_cadastro) values ('jose@123.com', '1234', utc_timestamp);
 insert into usuario (email, senha, data_cadastro) values ('valmeida@123.com', '1234', utc_timestamp);
+
+insert into usuario_grupo(usuario_id, grupo_id) values (1, 1);
+insert into usuario_grupo(usuario_id, grupo_id) values (1, 3);
+insert into usuario_grupo(usuario_id, grupo_id) values (2, 2);
+insert into usuario_grupo(usuario_id, grupo_id) values (2, 3);
 

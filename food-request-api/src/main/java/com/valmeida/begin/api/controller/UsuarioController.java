@@ -1,23 +1,9 @@
 package com.valmeida.begin.api.controller;
 
-import java.util.List;
-
-import javax.validation.Valid;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
-
+import com.valmeida.begin.api.assembler.GrupoModelAssembler;
 import com.valmeida.begin.api.assembler.UsuarioInputDisassembler;
 import com.valmeida.begin.api.assembler.UsuarioModelAssembler;
+import com.valmeida.begin.api.model.GrupoModel;
 import com.valmeida.begin.api.model.UsuarioModel;
 import com.valmeida.begin.api.model.input.UsuarioInput;
 import com.valmeida.begin.api.model.input.UsuarioInputAtualizaEmail;
@@ -25,6 +11,12 @@ import com.valmeida.begin.api.model.input.UsuarioInputAtualizaSenha;
 import com.valmeida.begin.domain.model.Usuario;
 import com.valmeida.begin.domain.repository.UsuarioRepository;
 import com.valmeida.begin.domain.service.CadastroUsuarioService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/usuarios")
@@ -41,6 +33,9 @@ public class UsuarioController {
 	
 	@Autowired
 	private UsuarioInputDisassembler usuarioInputDisassembler;
+
+	@Autowired
+	private GrupoModelAssembler grupoModelAssembler;
 	
 	@GetMapping
 	public List<UsuarioModel> listar() {
@@ -50,6 +45,13 @@ public class UsuarioController {
 	@GetMapping("/{usuarioId}")
 	public UsuarioModel buscar(@PathVariable Long usuarioId) {
 		return usuarioModelAssembler.toModel(usuarioService.buscarOuFalhar(usuarioId));
+	}
+
+	@GetMapping("/{usuarioId}/grupos")
+	public List<GrupoModel> listarGrupos(@PathVariable final Long usuarioId) {
+		final var usuario = this.usuarioService.buscarOuFalhar(usuarioId);
+
+		return this.grupoModelAssembler.toCollectionModel(usuario.getGrupos());
 	}
 	
 	@PostMapping
@@ -68,6 +70,12 @@ public class UsuarioController {
 		
 		return usuarioModelAssembler.toModel(usuarioService.salvar(usuarioAtual));
 	}
+
+	@PutMapping("/{usuarioId}/grupos/{grupoId}")
+	@ResponseStatus(code = HttpStatus.NO_CONTENT)
+	public void associarGrupo(@PathVariable final Long usuarioId, @PathVariable final Long grupoId) {
+		this.usuarioService.associarGrupo(usuarioId, grupoId);
+	}
 	
 	@PutMapping("/{usuarioId}/senha")
 	@ResponseStatus(code = HttpStatus.NO_CONTENT)
@@ -79,5 +87,11 @@ public class UsuarioController {
 	@ResponseStatus(code = HttpStatus.NO_CONTENT)
 	public void remover(@PathVariable Long usuarioId) {
 		usuarioService.remover(usuarioId);
+	}
+
+	@DeleteMapping("{usuarioId}/grupos/{grupoId}")
+	@ResponseStatus(code = HttpStatus.NO_CONTENT)
+	public void desassociarGrupo(@PathVariable final Long usuarioId, @PathVariable final Long grupoId) {
+		this.usuarioService.desassociarGrupo(usuarioId,grupoId);
 	}
 }

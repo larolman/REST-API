@@ -2,7 +2,9 @@ package com.valmeida.begin.domain.model;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -42,6 +44,14 @@ public class Usuario {
 	@JoinTable(name = "usuario_grupo",
 				joinColumns = @JoinColumn(name = "usuario_id"),
 				inverseJoinColumns = @JoinColumn(name = "grupo_id"))
-	List<Grupo> grupos = new ArrayList<>();
+	Set<Grupo> grupos = new HashSet<>();
+
+	public void associarGrupo(final Grupo grupo) {
+		this.grupos.add(grupo);
+	}
+
+	public void desassociarGrupo(final Grupo grupo) {
+		this.grupos.remove(grupo);
+	}
 	
 }

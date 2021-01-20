@@ -2,6 +2,7 @@ package com.valmeida.begin.domain.service;
 
 import java.util.Optional;
 
+import com.valmeida.begin.domain.repository.GrupoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -23,6 +24,9 @@ public class CadastroUsuarioService {
 	
 	@Autowired
 	private UsuarioRepository usuarioRepository;
+
+	@Autowired
+	private CadastroGrupoService grupoService;
 	
 	@Transactional
 	public Usuario salvar(Usuario usuario) {
@@ -65,4 +69,21 @@ public class CadastroUsuarioService {
 			throw new UsuarioSenhaInvalidaException("Senha atual inválida, tente novamente");
 		}
 	}
+
+	@Transactional
+    public void associarGrupo(Long usuarioId, Long grupoId) {
+		final var usuario = buscarOuFalhar(usuarioId);
+		final var grupo = this.grupoService.buscarOuFalhar(grupoId);
+
+		usuario.associarGrupo(grupo);
+    }
+
+	@Transactional
+	public void desassociarGrupo(Long usuarioId, Long grupoId) {
+		final var usuario = buscarOuFalhar(usuarioId);
+		final var grupo = this.grupoService.buscarOuFalhar(grupoId);
+
+		usuario.desassociarGrupo(grupo);
+	}
+
 }
