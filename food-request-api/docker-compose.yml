@@ -16,7 +16,7 @@ services:
 
   food-request:
     build:
-      context: ""
+      context: .
       dockerfile: Dockerfile
     container_name: food-request-api
     hostname: food-request-api
