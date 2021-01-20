@@ -19,6 +19,7 @@ services:
       context: .
       dockerfile: ./Dockerfile
     container_name: food-request-api
+    hostname: food-request-api
     env_file:
       - .env
     ports:

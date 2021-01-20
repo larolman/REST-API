@@ -9,11 +9,11 @@ import java.util.TimeZone;
 
 @SpringBootApplication
 @EnableJpaRepositories(repositoryBaseClass = CustomJpaRepositoryImpl.class)
-public class BeginApi1Application {
+public class FoodRequestApplication {
 
 	public static void main(String[] args) {
 		TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
-		SpringApplication.run(BeginApi1Application.class, args);
+		SpringApplication.run(FoodRequestApplication.class, args);
 	}
 
 }
