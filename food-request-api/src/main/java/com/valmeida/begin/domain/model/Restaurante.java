@@ -72,24 +72,38 @@ public class Restaurante {
 				joinColumns = @JoinColumn(name = "restaurante_id"),
 				inverseJoinColumns = @JoinColumn(name = "forma_pagamento_id"))
 	private Set<FormaPagamento> formaPagamento = new HashSet<>();
+
+	@ManyToMany
+	@JoinTable(name = "restaurante_usuario_responsavel",
+				joinColumns = @JoinColumn(name = "restaurante_id"),
+				inverseJoinColumns = @JoinColumn(name = "usuario_id"))
+	private Set<Usuario> usuariosResponsaveis = new HashSet<>();
 	
 	@OneToMany(mappedBy = "restaurante")
 	private List<Produto> produtos = new ArrayList<>();
 
 	public void ativar() {
-		setAtivo(true);
+		this.setAtivo(true);
 	}
 	
 	public void inativar() {
-		setAtivo(false);
+		this.setAtivo(false);
 	}
 	
-	public boolean removerFormaPagamento(FormaPagamento formaPagamento) {
-		return getFormaPagamento().remove(formaPagamento);
+	public void removerFormaPagamento(final FormaPagamento formaPagamento) {
+		this.getFormaPagamento().remove(formaPagamento);
 	}
 	
-	public boolean adicionarFormaPagamento(FormaPagamento formaPagamento) {
-		return getFormaPagamento().add(formaPagamento);
+	public void adicionarFormaPagamento(final FormaPagamento formaPagamento) {
+		this.getFormaPagamento().add(formaPagamento);
+	}
+
+	public void associonarUsuarioResponsavel(final Usuario usuario) {
+		this.usuariosResponsaveis.add(usuario);
+	}
+
+	public void desassociarUsuarioResponsavel(final Usuario usuario) {
+		this.usuariosResponsaveis.remove(usuario);
 	}
 }
 
