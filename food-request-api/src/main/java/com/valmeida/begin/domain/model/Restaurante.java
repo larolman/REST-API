@@ -91,11 +91,11 @@ public class Restaurante {
 	}
 	
 	public void removerFormaPagamento(final FormaPagamento formaPagamento) {
-		this.getFormaPagamento().remove(formaPagamento);
+		this.formaPagamento.remove(formaPagamento);
 	}
 	
 	public void adicionarFormaPagamento(final FormaPagamento formaPagamento) {
-		this.getFormaPagamento().add(formaPagamento);
+		this.formaPagamento.add(formaPagamento);
 	}
 
 	public void associonarUsuarioResponsavel(final Usuario usuario) {

@@ -1,6 +1,7 @@
 package com.valmeida.begin.domain.service;
 
 
+import com.valmeida.begin.domain.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -9,14 +10,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.valmeida.begin.domain.exception.EntidadeEmUsoException;
 import com.valmeida.begin.domain.exception.RestauranteNaoEncontradoException;
-import com.valmeida.begin.domain.model.Cidade;
-import com.valmeida.begin.domain.model.Cozinha;
-import com.valmeida.begin.domain.model.FormaPagamento;
-import com.valmeida.begin.domain.model.Restaurante;
 import com.valmeida.begin.domain.repository.RestauranteRepository;
 
 @Service
 public class CadastroRestauranteService {
+
 	private static final String MSG_ENTIDADE_EM_USO = "Restaurante de código %d não pode ser removido pois está em uso";
 
 	@Autowired
@@ -30,6 +28,9 @@ public class CadastroRestauranteService {
 	
 	@Autowired
 	private CadastroFormaPagamentoService formaPagamentoService;
+
+	@Autowired
+	private CadastroUsuarioService usuarioService;
 	
 	@Transactional
 	public Restaurante salvar(Restaurante restaurante) {
@@ -102,6 +103,22 @@ public class CadastroRestauranteService {
 		FormaPagamento formaPagamento = formaPagamentoService.bucarOuFalhar(formaPagamentoId);
 		
 		restaurante.adicionarFormaPagamento(formaPagamento);
+	}
+
+	@Transactional
+	public void associarUsuarioResponsavel(final Long restauranteId, final Long usuarioId) {
+		Restaurante restaurante = buscarOuFalhar(restauranteId);
+		Usuario usuario = this.usuarioService.buscarOuFalhar(usuarioId);
+
+		restaurante.associonarUsuarioResponsavel(usuario);
+	}
+
+	@Transactional
+	public void desassociarUsuarioResponsavel(final Long restauranteId, final Long usuarioId) {
+		Restaurante restaurante = buscarOuFalhar(restauranteId);
+		Usuario usuario = this.usuarioService.buscarOuFalhar(usuarioId);
+
+		restaurante.desassociarUsuarioResponsavel(usuario);
 	}
 
 	public Restaurante buscarOuFalhar(Long restauranteId) {
