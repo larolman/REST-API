@@ -2,15 +2,9 @@ package com.valmeida.begin.domain.service;
 
 
 import com.valmeida.begin.domain.dto.RestauranteAvroMapper;
-import com.valmeida.begin.domain.model.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.valmeida.begin.domain.exception.EntidadeEmUsoException;
 import com.valmeida.begin.domain.exception.RestauranteNaoEncontradoException;
+import com.valmeida.begin.domain.model.*;
 import com.valmeida.begin.domain.repository.RestauranteRepository;
 import com.valmeida.begin.infrastructure.kafka.producer.RestauranteProducer;
 import org.springframework.beans.factory.annotation.Autowired;
