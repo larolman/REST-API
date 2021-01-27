@@ -2,12 +2,15 @@ package com.valmeida.begin.domain.service;
 
 
 import com.valmeida.begin.domain.dto.RestauranteAvroMapper;
+import com.valmeida.begin.domain.model.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.valmeida.begin.domain.exception.EntidadeEmUsoException;
 import com.valmeida.begin.domain.exception.RestauranteNaoEncontradoException;
-import com.valmeida.begin.domain.model.Cidade;
-import com.valmeida.begin.domain.model.Cozinha;
-import com.valmeida.begin.domain.model.FormaPagamento;
-import com.valmeida.begin.domain.model.Restaurante;
 import com.valmeida.begin.domain.repository.RestauranteRepository;
 import com.valmeida.begin.infrastructure.kafka.producer.RestauranteProducer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class CadastroRestauranteService {
+
 	private static final String MSG_ENTIDADE_EM_USO = "Restaurante de código %d não pode ser removido pois está em uso";
 
 	@Autowired
@@ -33,11 +37,14 @@ public class CadastroRestauranteService {
 	private CadastroFormaPagamentoService formaPagamentoService;
 
 	@Autowired
+	private CadastroUsuarioService usuarioService;
+
+	@Autowired
 	private RestauranteProducer restauranteProducer;
 
 	@Autowired
 	private RestauranteAvroMapper mapper;
-	
+
 	@Transactional
 	public Restaurante salvar(Restaurante restaurante) {
 		Long cozinhaId = restaurante.getCozinha().getId();
@@ -112,6 +119,22 @@ public class CadastroRestauranteService {
 		FormaPagamento formaPagamento = formaPagamentoService.bucarOuFalhar(formaPagamentoId);
 		
 		restaurante.adicionarFormaPagamento(formaPagamento);
+	}
+
+	@Transactional
+	public void associarUsuarioResponsavel(final Long restauranteId, final Long usuarioId) {
+		Restaurante restaurante = buscarOuFalhar(restauranteId);
+		Usuario usuario = this.usuarioService.buscarOuFalhar(usuarioId);
+
+		restaurante.associonarUsuarioResponsavel(usuario);
+	}
+
+	@Transactional
+	public void desassociarUsuarioResponsavel(final Long restauranteId, final Long usuarioId) {
+		Restaurante restaurante = buscarOuFalhar(restauranteId);
+		Usuario usuario = this.usuarioService.buscarOuFalhar(usuarioId);
+
+		restaurante.desassociarUsuarioResponsavel(usuario);
 	}
 
 	public Restaurante buscarOuFalhar(Long restauranteId) {

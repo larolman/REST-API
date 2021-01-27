@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.valmeida</groupId>
-	<artifactId>begin-api-1</artifactId>
+	<artifactId>food-request</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
 	<name>begin-api-1</name>
 	<description>Projeto Inicial - Com JPA</description>

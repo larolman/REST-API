@@ -14,6 +14,7 @@ delete from usuario;
 delete from usuario_grupo;
 delete from pedido;
 delete from item_pedido;
+delete from restaurante_usuario_responsavel;
 
 set foreign_key_checks = 1;
 
@@ -31,6 +32,7 @@ alter table usuario auto_increment = 1;
 alter table usuario_grupo auto_increment = 1;
 alter table pedido auto_increment = 1;
 alter table item_pedido auto_increment = 1;
+alter table restaurante_usuario_responsavel auto_increment = 1;
 
 insert into cozinha (id, nome) values (1, 'Tailandesa');
 insert into cozinha (id, nome) values (2, 'Indiana');
@@ -91,4 +93,10 @@ insert into usuario_grupo(usuario_id, grupo_id) values (1, 1);
 insert into usuario_grupo(usuario_id, grupo_id) values (1, 3);
 insert into usuario_grupo(usuario_id, grupo_id) values (2, 2);
 insert into usuario_grupo(usuario_id, grupo_id) values (2, 3);
+
+insert into restaurante_usuario_responsavel(restaurante_id, usuario_id) values (1,1);
+insert into restaurante_usuario_responsavel(restaurante_id, usuario_id) values (2,1);
+insert into restaurante_usuario_responsavel(restaurante_id, usuario_id) values (2,2);
+insert into restaurante_usuario_responsavel(restaurante_id, usuario_id) values (3,2);
+
 
