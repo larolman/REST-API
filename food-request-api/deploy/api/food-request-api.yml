@@ -34,7 +34,7 @@ spec:
           image: gcr.io/cloudsql-docker/gce-proxy:1.17
           command:
             - "/cloud_sql_proxy"
-            - "instances=projeto-time-desconhecido:southamerica-east1:food-request=tcp:0.0.0.0:3306"
+            - "instances=projeto-time-desconhecido:southamerica-east1:food-request=tcp:3306"
           securityContext:
             runAsNonRoot: true
 ---
