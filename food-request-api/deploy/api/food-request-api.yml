@@ -17,7 +17,7 @@ spec:
       serviceAccountName: food-request-ksa
       containers:
         - name: food-request-api
-          image: gcr.io/projeto-time-desconhecido/food-request-api:latest
+          image: gcr.io/aqueous-radio-307722/food-request-api:latest
           ports:
             - containerPort: 8080
           env:
@@ -31,7 +31,7 @@ spec:
             - name: MYSQL_USER
               value: "root"
         - name: cloud-sql-proxy
-          image: gcr.io/cloudsql-docker/gce-proxy:1.17
+          image: gcr.io/cloudsql-docker/gce-proxy:latest
           command:
             - "/cloud_sql_proxy"
             - "instances=aqueous-radio-307722:southamerica-east1:food-request-mysql=tcp:3306"
