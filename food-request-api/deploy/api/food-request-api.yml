@@ -33,10 +33,10 @@ spec:
         - name: cloud-sql-proxy
           image: gcr.io/cloudsql-docker/gce-proxy:1.17
           command:
-          - "/cloud_sql_proxy"
-          - "-instances=food-request=tcp:3306"
+            - "/cloud_sql_proxy"
+            - "-instances=food-request=tcp:3306"
           securityContext:
-          runAsNonRoot: true
+            runAsNonRoot: true
 ---
 apiVersion: v1
 kind: Service
