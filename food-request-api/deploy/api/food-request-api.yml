@@ -5,7 +5,7 @@ metadata:
   labels:
     app: api
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: api
@@ -14,9 +14,10 @@ spec:
       labels:
         app: api
     spec:
+      serviceAccountName: food-request-ksa
       containers:
         - name: food-request-api
-          image: larolman/food-request-api:latest
+          image: gcr.io/projeto-time-desconhecido/food-request-api:latest
           ports:
             - containerPort: 8080
           env:
@@ -26,9 +27,16 @@ spec:
                   name: mysql-secrets
                   key: ROOT_PASSWORD
             - name: MYSQL_HOST
-              value: "jdbc:mysql://mysql-service/foodrequest?createDatabaseIfNotExist=true&serverTimezone=UTC&useSSL=false"
+              value: "jdbc:mysql://cloud-sql-proxy/foodrequest?createDatabaseIfNotExist=true&serverTimezone=UTC&useSSL=false"
             - name: MYSQL_USER
               value: "root"
+        - name: cloud-sql-proxy
+          image: gcr.io/cloudsql-docker/gce-proxy:1.17
+          command:
+          - "/cloud_sql_proxy"
+          - "-instances=food-request=tcp:3306"
+          securityContext:
+          runAsNonRoot: true
 ---
 apiVersion: v1
 kind: Service
@@ -37,26 +45,9 @@ metadata:
 spec:
   selector:
     app: api
-  type: ClusterIP
+  type: LoadBalancer
   ports:
     - protocol: TCP
       port: 8080
       targetPort: 8080
 ---
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: api-ingress
-  annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
-spec:
-  rules:
-    - http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: api-service
-                port:
-                  number: 8080
