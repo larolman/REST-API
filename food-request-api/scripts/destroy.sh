@@ -15,19 +15,5 @@ gcloud projects remove-iam-policy-binding "$PROJECT" \
 --member serviceAccount:"$FULL_SA_NAME" \
 --role roles/cloudsql.client > /dev/null
 
-gcloud projects remove-iam-policy-binding "$PROJECT" \
---member serviceAccount:"$FULL_NODE_SA_NAME" \
---role roles/logging.logWriter > /dev/null
-
-gcloud projects remove-iam-policy-binding "$PROJECT" \
---member serviceAccount:"$FULL_NODE_SA_NAME" \
---role roles/monitoring.metricWriter > /dev/null
-
-gcloud projects remove-iam-policy-binding "$PROJECT" \
---member serviceAccount:"$FULL_NODE_SA_NAME" \
---role roles/monitoring.viewer > /dev/null
-
 gcloud iam service-accounts delete "$FULL_SA_NAME" \
 --quiet && rm credentials.json
-
-gcloud iam service-accounts delete "$FULL_NODE_SA_NAME" --quiet
