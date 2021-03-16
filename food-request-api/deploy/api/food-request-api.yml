@@ -20,7 +20,7 @@ spec:
             secretName: cloudsql-sa-creds
       containers:
         - name: food-request-api
-          image: gcr.io/gcp-demo/food-request-api:latest
+          image: gcr.io/project/food-request-api:latest
           ports:
             - containerPort: 8080
           env:

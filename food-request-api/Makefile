@@ -14,10 +14,10 @@ build-api:
 
 build-docker:
 	@ $(MAKE) build-api
-	@ docker build -t gcr.io/${PROJECT_ID}/food-request-api .
+	@ docker build -t gcr.io/${PROJECT}/food-request-api .
 
 push-docker-image:
-	@ docker push gcr.io/${PROJECT_ID}/food-request-api:latest
+	@ docker push gcr.io/${PROJECT}/food-request-api:latest
 
 deploy-api:
 	@ echo " --- DEPLOYING FOOD REQUEST API TO K8s --- "
@@ -34,6 +34,7 @@ create-infra:
 	@ $(MYSQL_INSTANCE)
 	@ $(CLUSTER)
 	@ $(CONFIG)
+	@ sed -i "s/\/project\//\/$(PROJECT)\//g" deploy/api/food-request-api.yml
 
 destroy-infra:
 	@ echo " --- DESTROYING K8s RESOURCES --- "
