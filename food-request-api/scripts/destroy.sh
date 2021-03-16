@@ -4,6 +4,8 @@ ROOT=$(dirname "${BASH_SOURCE[0]}")
 # shellcheck disable=SC1090
 source "${ROOT}"/constants.sh
 
+INSTANCE_NAME=$(gcloud sql instances list | awk '{ print $1 }' | grep -i -v 'NAME')
+
 gcloud sql instances delete "$INSTANCE_NAME" --quiet
 
 gcloud container clusters delete \
