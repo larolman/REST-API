@@ -35,8 +35,13 @@ spec:
           command:
             - "/cloud_sql_proxy"
             - "instances=aqueous-radio-307722:southamerica-east1:food-request-mysql=tcp:3306"
+            - "-credential_file=/secrets/service_account.json"
           securityContext:
             runAsNonRoot: true
+          volumeMounts:
+            - name: time-desconhecido-sa-secret
+              mountPath: /secrets/
+              readOnly: true
 ---
 apiVersion: v1
 kind: Service
