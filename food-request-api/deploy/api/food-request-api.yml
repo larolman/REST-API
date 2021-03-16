@@ -73,8 +73,23 @@ spec:
   rules:
     - http:
         paths:
-          - path: /*
-            pathType: Prefix
+          - path: /cozinhas
+            backend:
+              serviceName: api-service
+              servicePort: 80
+          - path: /grupos
+            backend:
+              serviceName: api-service
+              servicePort: 80
+          - path: /restaurantes
+            backend:
+              serviceName: api-service
+              servicePort: 80
+          - path: /usuarios
+            backend:
+              serviceName: api-service
+              servicePort: 80
+          - path: /forma-pagamentos
             backend:
               serviceName: api-service
               servicePort: 80
