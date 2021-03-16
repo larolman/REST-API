@@ -7,7 +7,6 @@ export CLUSTER_NAME=gke-demo
 
 INSTANCE_REGION=$(gcloud config get-value compute/region)
 export INSTANCE_REGION
-export INSTANCE_NAME=food-request-mysql
 export SA_NAME=food-request-demo-sa
 export NODE_SA_NAME=food-request-demo-node-sa
 export FULL_SA_NAME=$SA_NAME@$PROJECT.iam.gserviceaccount.com
