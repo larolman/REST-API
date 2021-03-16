@@ -17,10 +17,10 @@ spec:
       volumes:
         - name: cloud-sql-vol
           secret:
-            secretName: time-desconhecido-sa-secret
+            secretName: cloudsql-sa-creds
       containers:
         - name: food-request-api
-          image: gcr.io/aqueous-radio-307722/food-request-api:latest
+          image: gcr.io/gcp-demo/food-request-api:latest
           ports:
             - containerPort: 8080
           env:
@@ -34,11 +34,17 @@ spec:
             - name: MYSQL_USER
               value: "root"
         - name: cloud-sql-proxy
-          image: gcr.io/cloudsql-docker/gce-proxy:1.17
+          image: gcr.io/cloudsql-docker/gce-proxy:latest
+          env:
+            - name: INSTANCE_CONNECTION
+              valueFrom:
+                configMapKeyRef:
+                  name: connectionname
+                  key: connectionname
           command:
             - "/cloud_sql_proxy"
-            - "-instances=aqueous-radio-307722:southamerica-east1:food-request-mysql=tcp:0.0.0.0:3306"
-            - "-credential_file=/secrets/service_account.json"
+            - "-instances=$(INSTANCE_CONNECTION)=tcp:0.0.0.0:3306"
+            - "-credential_file=/secrets/credentials.json"
           volumeMounts:
             - name: cloud-sql-vol
               mountPath: /secrets/
