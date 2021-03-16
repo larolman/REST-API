@@ -1,5 +1,6 @@
 MVN=./mvnw
 API_DIR=deploy/api
+UTILS_DIR=deploy/utils
 CONSTANTS=scripts/constants.sh
 CLUSTER=scripts/cluster.sh
 CONFIG=scripts/configs_secrets.sh
@@ -22,6 +23,7 @@ push-docker-image:
 
 deploy-api:
 	@ echo " --- DEPLOYING FOOD REQUEST API TO K8s --- "
+	@ kubectl apply -f $(UTILS_DIR)
 	@ kubectl apply -f $(API_DIR)
 
 destroy-k8s:
