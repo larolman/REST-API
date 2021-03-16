@@ -35,17 +35,14 @@ spec:
               value: "root"
         - name: cloud-sql-proxy
           image: gcr.io/cloudsql-docker/gce-proxy:1.17
-          command: [
-            "/cloud_sql_proxy",
-            "instances=aqueous-radio-307722:southamerica-east1:food-request-mysql=tcp:0.0.0.0:3306",
-            "-credential_file=/secrets/service_accountt.json"
-          ]
-          securityContext:
-            runAsNonRoot: true
+          command:
+            - "/cloud_sql_proxy"
+            - "instances=aqueous-radio-307722:southamerica-east1:food-request-mysql=tcp:0.0.0.0:3306"
+            - "-credential_file=/secrets/service_account.json"
           volumeMounts:
-          - name: cloud-sql-vol
-            mountPath: /secrets/
-            readOnly: true
+            - name: cloud-sql-vol
+              mountPath: /secrets/
+              readOnly: true
 ---
 apiVersion: v1
 kind: Service
