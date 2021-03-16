@@ -9,7 +9,7 @@ INSTANCE_NAME=$(gcloud sql instances list | awk '{ print $1 }' | grep -i -v 'NAM
 gcloud sql instances delete "$INSTANCE_NAME" --quiet
 
 gcloud container clusters delete \
-postgres-demo-cluster --zone "$CLUSTER_ZONE" --quiet
+gke-demo --zone "$CLUSTER_ZONE" --quiet
 
 gcloud projects remove-iam-policy-binding "$PROJECT" \
 --member serviceAccount:"$FULL_SA_NAME" \
