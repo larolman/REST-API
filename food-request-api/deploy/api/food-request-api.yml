@@ -14,7 +14,6 @@ spec:
       labels:
         app: api
     spec:
-      serviceAccountName: food-request-ksa
       containers:
         - name: food-request-api
           image: gcr.io/aqueous-radio-307722/food-request-api:latest
