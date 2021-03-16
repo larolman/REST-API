@@ -74,6 +74,7 @@ spec:
     - http:
         paths:
           - path: /
+            pathType: Prefix
             backend:
               serviceName: api-service
               servicePort: 80
