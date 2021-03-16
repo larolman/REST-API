@@ -75,5 +75,5 @@ spec:
         paths:
           - path: /*
             backend:
-              serviceName: api-ingress
+              serviceName: api-service
               servicePort: 80
