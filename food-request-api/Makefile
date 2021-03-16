@@ -31,7 +31,6 @@ create-infra:
 	@ echo " --- DEPLOYING INFRASTRUCTURE --- "
 	@ chmod +x scripts/*.sh
 	@ $(SET_ZONE_REGION)
-	@ $(CONSTANTS)
 	@ $(ENABLE_APIS)
 	@ $(MYSQL_INSTANCE)
 	@ $(CLUSTER)

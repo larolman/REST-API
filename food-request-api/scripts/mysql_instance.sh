@@ -1,5 +1,9 @@
 #!/bin/bash -e
 
+ROOT=$(dirname "${BASH_SOURCE[0]}")
+# shellcheck disable=SC1090
+source "${ROOT}"/constants.sh
+
 gcloud sql instances create "$INSTANCE_NAME" \
 --database-version MYSQL_5_7 \
 --region "$INSTANCE_REGION" \

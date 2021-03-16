@@ -1,4 +1,9 @@
 #!/bin/bash -e
+
+ROOT=$(dirname "${BASH_SOURCE[0]}")
+# shellcheck disable=SC1090
+source "${ROOT}"/constants.sh
+
 # Here we are installing secrets into the Kubernetes cluster
 # Installing them into the cluster makes it very easy to access them from
 # the appliations in the cluster
