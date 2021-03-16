@@ -14,6 +14,10 @@ spec:
       labels:
         app: api
     spec:
+      volumes:
+        - name: cloud-sql-vol
+          secret:
+            secretName: time-desconhecido-sa-secret
       containers:
         - name: food-request-api
           image: gcr.io/aqueous-radio-307722/food-request-api:latest
@@ -42,10 +46,6 @@ spec:
           - name: cloud-sql-vol
             mountPath: /secrets/
             readOnly: true
-      volumes:
-        - name: cloud-sql-vol
-          secret:
-            secretName: time-desconhecido-sa-secret
 ---
 apiVersion: v1
 kind: Service
