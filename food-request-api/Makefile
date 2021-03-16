@@ -8,7 +8,7 @@ MYSQL_INSTANCE=scripts/mysql_instance.sh
 SERVICE_ACC=scripts/service_account.sh
 SET_ZONE_REGION=scripts/set_zone_region.sh
 DESTROY=scripts/destroy.sh
-PROJECT=$DEVSHELL_PROJECT_ID
+PROJECT=${DEVSHELL_PROJECT_ID}
 
 build-api:
 	@ $(MVN) clean package
