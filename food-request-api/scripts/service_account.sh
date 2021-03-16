@@ -35,3 +35,5 @@ gcloud projects add-iam-policy-binding "$PROJECT" \
 gcloud projects add-iam-policy-binding "$PROJECT" \
 --member serviceAccount:"$FULL_NODE_SA_NAME" \
 --role roles/storage.objectViewer > /dev/null
+
+gcloud iam service-accounts keys create credentials.json --iam-account "$FULL_SA_NAME"

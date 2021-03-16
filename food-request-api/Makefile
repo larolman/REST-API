@@ -8,6 +8,7 @@ MYSQL_INSTANCE=scripts/mysql_instance.sh
 SERVICE_ACC=scripts/service_account.sh
 SET_ZONE_REGION=scripts/set_zone_region.sh
 DESTROY=scripts/destroy.sh
+PROJECT=$DEVSHELL_PROJECT_ID
 
 build-api:
 	@ $(MVN) clean package
@@ -36,7 +37,7 @@ create-infra:
 	@ $(SERVICE_ACC)
 	@ $(CLUSTER)
 	@ $(CONFIG)
-	@ sed -i "s/\/project\//\/$(PROJECT)\//g" deploy/api/food-request-api.yml
+	@ sed -i "s/\/project\//\/${PROJECT}\//g" deploy/api/food-request-api.yml
 
 destroy-infra:
 	@ echo " --- DESTROYING K8s RESOURCES --- "
