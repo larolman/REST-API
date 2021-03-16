@@ -33,6 +33,7 @@ create-infra:
 	@ $(SET_ZONE_REGION)
 	@ $(ENABLE_APIS)
 	@ $(MYSQL_INSTANCE)
+	@ $(SERVICE_ACC)
 	@ $(CLUSTER)
 	@ $(CONFIG)
 	@ sed -i "s/\/project\//\/$(PROJECT)\//g" deploy/api/food-request-api.yml
