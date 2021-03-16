@@ -39,9 +39,13 @@ spec:
           securityContext:
             runAsNonRoot: true
           volumeMounts:
-            - name: time-desconhecido-sa-secret
-              mountPath: /secrets/
-              readOnly: true
+          - name: cloud-sql-vol
+            mountPath: /secrets/
+            readOnly: true
+      volumes:
+        - name: cloud-sql-vol
+          secret:
+            secretName: time-desconhecido-sa-secret
 ---
 apiVersion: v1
 kind: Service
