@@ -23,6 +23,7 @@ push-docker-image:
 
 deploy-api:
 	@ echo " --- DEPLOYING FOOD REQUEST API TO K8s --- "
+	@ $(MAKE) set-project-registry
 	@ kubectl apply -f $(UTILS_DIR)
 	@ kubectl apply -f $(API_DIR)
 
@@ -39,8 +40,10 @@ create-infra:
 	@ $(SERVICE_ACC)
 	@ $(CLUSTER)
 	@ $(CONFIG)
-	@ sed -i "s/\/project\//\/${PROJECT}\//g" deploy/api/food-request-api.yml
 
 destroy-infra:
 	@ echo " --- DESTROYING K8s RESOURCES --- "
 	@ $(DESTROY)
+
+set-project-registry:
+	@ sed -i "s/\/project\//\/${PROJECT}\//g" deploy/api/food-request-api.yml
