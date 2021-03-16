@@ -10,7 +10,7 @@ source "${ROOT}"/constants.sh
 kubectl --namespace default create secret generic cloudsql-sa-creds \
 --from-file=credentials.json=credentials.json
 
-CONNECTION_NAME=$(gcloud sql instances describe "food-request-mysql" \
+CONNECTION_NAME=$(gcloud sql instances describe "$INSTANCE_NAME" \
 --format="value(connectionName)")
 
 # You can also store non-sensitive information in the cluster
