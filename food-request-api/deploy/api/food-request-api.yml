@@ -79,8 +79,6 @@ apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   name: api-ingress
-  annotations:
-    kubernetes.io/ingress.global-static-ip-name: food-rquest-api-global-ip
   labels:
     app: api
 spec:
