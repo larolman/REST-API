@@ -62,6 +62,16 @@ spec:
     - protocol: TCP
       port: 8080
       targetPort: 8080
-      name: http
-      nodePort: 30061
 ---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: api-ingress
+  annotations:
+    kubernetes.io/ingress.global-static-ip-name: food-rquest-api-global-ip
+  labels:
+    app: api
+spec:
+  backend:
+    serviceName: api-service
+    servicePort: 8080
