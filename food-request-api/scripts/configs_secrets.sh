@@ -6,7 +6,7 @@
 kubectl --namespace default create secret generic cloudsql-sa-creds \
 --from-file=credentials.json=credentials.json
 
-INSTANCE_NAME=$(gcloud sql instances list | awk '{ print $1 }' | grep -i -v 'NAME')
+INSTANCE_NAME=$(gcloud sql instances list --format="value(name)")
 
 CONNECTION_NAME=$(gcloud sql instances describe "$INSTANCE_NAME" \
 --format="value(connectionName)")
