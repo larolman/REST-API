@@ -33,6 +33,18 @@ spec:
               value: "jdbc:mysql://0.0.0.0/foodrequest?createDatabaseIfNotExist=true&serverTimezone=UTC&useSSL=false"
             - name: MYSQL_USER
               value: "root"
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8080
+            initialDelaySeconds: 20
+            periodSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8080
+            initialDelaySeconds: 20
+            periodSeconds: 5
         - name: cloud-sql-proxy
           image: gcr.io/cloudsql-docker/gce-proxy:latest
           env:
