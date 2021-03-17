@@ -57,23 +57,9 @@ metadata:
 spec:
   selector:
     app: api
-  type: NodePort
+  type: LoadBalancer
   ports:
     - protocol: TCP
       port: 80
       targetPort: 8080
 ---
-apiVersion: networking.k8s.io/v1beta1
-kind: Ingress
-metadata:
-  name: api-ingress
-  annotations:
-    kubernetes.io/ingress.class: "gce"
-spec:
-  rules:
-    - http:
-        paths:
-          - path: /*
-            backend:
-              serviceName: api-service
-              servicePort: 80
